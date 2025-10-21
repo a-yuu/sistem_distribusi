@@ -1,0 +1,15 @@
+# Framework untuk API
+fastapi
+uvicorn[standard]
+
+# Komunikasi antar-node
+httpx
+
+# Koneksi ke Redis
+redis
+
+# Membaca file .env
+python-dotenv
+
+# Untuk benchmarking
+locust

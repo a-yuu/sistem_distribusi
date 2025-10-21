@@ -1,0 +1,24 @@
+# Gunakan base image Python 3.12 yang ringan
+FROM python:3.12-slim
+
+# Tetapkan folder kerja di dalam container
+WORKDIR /app
+
+# Salin file requirements.txt terlebih dahulu
+# Ini memanfaatkan cache Docker. Instalasi tidak akan diulang
+# jika file requirements.txt tidak berubah.
+COPY requirements.txt .
+
+# Install semua dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Salin semua kode proyek Anda ke dalam folder /app di container
+COPY . .
+
+# Beri tahu Docker bahwa container akan berjalan di port
+# yang akan ditentukan oleh variabel $PORT
+EXPOSE 8000-8003
+
+# Perintah untuk menjalankan aplikasi saat container dihidupkan
+# Ini sama persis dengan yang Anda jalankan secara lokal
+CMD ["python", "-m", "src.main"]

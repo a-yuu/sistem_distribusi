@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # 1. Service untuk Redis
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379" # Membuka port Redis ke komputer Anda
+    volumes:
+      - redis_data:/data # Ini penting untuk message persistence
+
+  # 2. Service untuk Node Aplikasi Pertama
+  node1:
+    build:
+      context: ..  # Build dari parent directory (folder root proyek)
+      dockerfile: docker/dockerfile.node # Path ke Dockerfile Anda [cite: 122]
+    env_file:
+      - ../.env.node1 # Menggunakan file .env khusus untuk node1
+    ports:
+      - "8001:8001" # Map port 8001 di host ke 8001 di container
+    depends_on:
+      - redis # Pastikan Redis jalan dulu sebelum node ini
+
+  # 3. Service untuk Node Aplikasi Kedua
+  node2:
+    build:
+      context: ..
+      dockerfile: docker/dockerfile.node
+    env_file:
+      - ../.env.node2 # Menggunakan file .env khusus untuk node2
+    ports:
+      - "8002:8002"
+    depends_on:
+      - redis
+
+  # 4. Service untuk Node Aplikasi Ketiga
+  node3:
+    build:
+      context: ..
+      dockerfile: docker/dockerfile.node
+    env_file:
+      - ../.env.node3 # Menggunakan file .env khusus untuk node3
+    ports:
+      - "8003:8003"
+    depends_on:
+      - redis
+
+# Mendefinisikan volume yang digunakan oleh service Redis
+volumes:
+  redis_data:
